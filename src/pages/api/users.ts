@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getDatabaseConnection } from "@/lib/db";
-import { Tenant } from "@/entity/Tenant";
+import { User } from "@/entity/User";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,33 +8,32 @@ export default async function handler(
 ) {
   try {
     const dataSource = await getDatabaseConnection();
-    const tenantRepository = dataSource.getRepository(Tenant);
+    const userRepository = dataSource.getRepository(User);
 
     switch (req.method) {
       case "GET":
         try {
-          const tenants = await tenantRepository.find();
-          res.status(200).json(tenants);
+          const users = await userRepository.find();
+          res.status(200).json(users);
         } catch (error) {
-          console.error("Erreur lors de la récupération des tenants:", error);
+          console.error("Erreur lors de la récupération des users:", error);
           res
             .status(500)
-            .json({ error: "Erreur lors de la récupération des tenants" });
+            .json({ error: "Erreur lors de la récupération des users" });
         }
         break;
 
       case "POST":
         try {
-          const newTenant = new Tenant();
-          newTenant.name = req.body.name;
-          newTenant.creationDate = new Date();
-          const savedTenant = await tenantRepository.save(newTenant);
-          res.status(201).json(savedTenant);
+          const newUser = new User();
+          newUser.name = req.body.name;
+          newUser.email = req.body.email;
+          newUser.password = req.body.password;
+          const savedUser = await userRepository.save(newUser);
+          res.status(201).json(savedUser);
         } catch (error) {
-          console.error("Erreur lors de la création du tenant:", error);
-          res
-            .status(500)
-            .json({ error: "Erreur lors de la création du tenant" });
+          console.error("Erreur lors de la création du user:", error);
+          res.status(500).json({ error: "Erreur lors de la création du user" });
         }
         break;
 

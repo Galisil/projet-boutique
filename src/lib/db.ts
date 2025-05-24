@@ -17,5 +17,3 @@ export async function getDatabaseConnection() {
   }
   return AppDataSource;
 }
-
-getDatabaseConnection();

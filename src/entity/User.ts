@@ -1,22 +1,33 @@
-// import {
-//   BaseEntity,
-//   Entity,
-//   PrimaryGeneratedColumn,
-//   // ForeignKey,
-//   Column,
-// } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  // ForeignKey,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-// @Entity()
-// export class User extends BaseEntity {
-//   @PrimaryGeneratedColumn()
-//   id!: number;
+@Entity()
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-//   @Column()
-//   name!: string;
+  @Column()
+  name!: string;
 
-//   @Column()
-//   isActive!: boolean;
+  @Column({ unique: true })
+  email!: string;
 
-//   /*@ForeignKey()
-//   tenant_id!: number; //number[] car peut appartenir à plusieurs tenants ?*/
-// }
+  @Column()
+  password!: string;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
+  /*@ForeignKey()
+  tenant_id!: number; //number[] car peut appartenir à plusieurs tenants ?*/
+}
