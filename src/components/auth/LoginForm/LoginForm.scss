@@ -1,0 +1,41 @@
+.divRegisterForm {
+  display: flex;
+  justify-content: center;
+  margin: 5vh;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  padding: 10px;
+  gap: 3vh;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1vh;
+  font-weight: bold;
+}
+
+.btnForm {
+  border-radius: 15px;
+  border: 0.01em solid rgba(128, 128, 128, 0.815);
+  background-color: rgba(211, 211, 211, 0.555);
+  padding: 10px;
+  //width: 30%
+}
+
+.submitBtnForm {
+  border-radius: 15px;
+  box-shadow: 1px 3px 5px;
+  width: 20%;
+  background-color: rgba(128, 128, 128, 0.76);
+
+  &:hover {
+    background-color: grey;
+    box-shadow: 1px 2px 5px;
+    cursor: pointer;
+  }
+}
