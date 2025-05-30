@@ -1,0 +1,22 @@
+.div-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-title {
+  font-size: 3em;
+}
+
+.banner-nav-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2vh;
+}
+
+.banner-nav-li {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

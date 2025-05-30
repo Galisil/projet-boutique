@@ -29,7 +29,6 @@ export default function LoginForm({ onSubmit }: RegisterFormProps) {
 
   return (
     <>
-      <h1>Voilà un super formulaire de connexion</h1>
       <div className="divRegisterForm">
         {error && <div className="error-message">{error}</div>}
         <form className="registerForm" onSubmit={handleSubmit}>

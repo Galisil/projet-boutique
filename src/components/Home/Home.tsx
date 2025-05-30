@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <>
-      <h1>Coucou ici la page Home</h1>
+      <h2>Plongez dans un océan de talents - bienvenue en Artlantide</h2>
     </>
   );
 }

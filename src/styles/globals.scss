@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 } */
+
+main {
+  padding: 5vh;
+  flex: 1; // Prend tout l'espace restant entre header et footer
+}
+
+.layout-container {
+  min-height: 100vh; // Prend toute la hauteur de la fenêtre
+  display: flex;
+  flex-direction: column;
+}

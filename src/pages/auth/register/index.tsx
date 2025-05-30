@@ -22,24 +22,23 @@ export default function Register() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'inscription");
-      }
-
       const data = await response.json();
 
-      if (data.success && data.token) {
-        // Stocker le token dans le localStorage
-        localStorage.setItem("token", data.token);
-        // Redirection vers la page de connexion ou le dashboard
+      if (!response.ok) {
+        throw new Error(data.message || "Erreur lors de l'inscription");
+      }
+
+      if (data.success) {
+        // Redirection vers la page de connexion
         router.push("/auth/login");
       } else {
-        // Gérer l'erreur (afficher un message à l'utilisateur)
-        console.error(data.message);
+        throw new Error(data.message || "Erreur lors de l'inscription");
       }
     } catch (error) {
-      console.error("Erreur:", error);
-      // Gérer l'erreur (afficher un message à l'utilisateur)
+      if (error instanceof Error) {
+        throw error; // Propager l'erreur au composant RegisterForm
+      }
+      throw new Error("Une erreur est survenue lors de l'inscription");
     }
   };
 

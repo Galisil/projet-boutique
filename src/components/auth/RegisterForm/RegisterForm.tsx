@@ -12,35 +12,42 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
     event.preventDefault();
     setError("");
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const confirmEmail = formData.get("confirmEmail") as string;
-    const name = formData.get("name") as string;
-    const password = formData.get("password") as string;
-    const confirmPassword = formData.get("confirmPassword") as string;
+    try {
+      const formData = new FormData(event.currentTarget);
+      const email = formData.get("email") as string;
+      const confirmEmail = formData.get("confirmEmail") as string;
+      const name = formData.get("name") as string;
+      const password = formData.get("password") as string;
+      const confirmPassword = formData.get("confirmPassword") as string;
 
-    // Validation des champs
-    if (email !== confirmEmail) {
-      setError("Les adresses email ne correspondent pas");
-      return;
+      // Validation des champs
+      if (email !== confirmEmail) {
+        setError("Les adresses email ne correspondent pas");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setError("Les mots de passe ne correspondent pas");
+        return;
+      }
+
+      if (password.length < 6) {
+        setError("Le mot de passe doit contenir au moins 6 caractères");
+        return;
+      }
+
+      await onSubmit(email, name, password);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Une erreur est survenue lors de l'inscription");
+      }
     }
-
-    if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
-      return;
-    }
-
-    await onSubmit(email, name, password);
   };
 
   return (
     <>
-      <h1>Voilà un super formulaire d&apos;inscription</h1>
       <div className="divRegisterForm">
         {error && <div className="error-message">{error}</div>}
         <form className="registerForm" onSubmit={handleSubmit}>
