@@ -2,7 +2,7 @@
 
 import "reflect-metadata";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { entities } from "@/entity"; //pointe vers index.ts de dir 'entity' pour regrouper toutes les entities
+import { entities } from "@/modules/allEntities"; //pointe vers index.ts de dir 'entity' pour regrouper toutes les entities
 
 const config: DataSourceOptions = {
   type: "postgres",

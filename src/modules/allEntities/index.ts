@@ -1,5 +1,5 @@
-import { Tenant } from "./Tenant";
-import { User } from "./User";
+import { Tenant } from "../tenants/database/Tenant";
+import { User } from "../users/database/User";
 
 // Exportez toutes les entités ici
 export const entities = [
