@@ -33,7 +33,6 @@ async function handler(
     // Vérifier si l'email existe déjà
     const userRepository = AppDataSource.getRepository(User);
     const existingEmail = await userRepository.findOne({ where: { email } });
-    const existingName = await userRepository.findOne({ where: { name } });
 
     if (existingEmail) {
       return res.status(400).json({
@@ -41,7 +40,7 @@ async function handler(
         success: false,
       });
     }
-
+    const existingName = await userRepository.findOne({ where: { name } });
     if (existingName) {
       return res.status(400).json({
         message: "Ce nom d'utilisateur est déjà pris",

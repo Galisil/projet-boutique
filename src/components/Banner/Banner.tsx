@@ -11,17 +11,17 @@ export default function Banner() {
       <nav>
         <ul className="banner-nav-container">
           <li className="banner-nav-li">
-            <Link href="/home">accueil</Link>
+            <Link href="/home">Accueil</Link>
           </li>
           <li className="banner-nav-li">
-            <Link href="/home">à propos</Link>{" "}
+            <Link href="/home">A propos</Link>{" "}
             {/*remplacer lien qd j'aurais fait une page à propos*/}
           </li>
           <li className="banner-nav-li">
-            <Link href="/auth/login">connexion</Link>
+            <Link href="/auth/login">Connexion</Link>
           </li>
           <li className="banner-nav-li">
-            <Link href="/auth/register">inscription</Link>
+            <Link href="/auth/register">Inscription</Link>
           </li>
         </ul>
       </nav>

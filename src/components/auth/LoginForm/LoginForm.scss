@@ -1,3 +1,5 @@
+@import "../../../styles/globals.scss";
+
 .divRegisterForm {
   display: flex;
   justify-content: center;
@@ -21,20 +23,21 @@
 
 .btnForm {
   border-radius: 15px;
-  border: 0.01em solid rgba(128, 128, 128, 0.815);
+  border: 0.01em solid $theme-color;
   background-color: rgba(211, 211, 211, 0.555);
   padding: 10px;
-  //width: 30%
+  width: 100%;
 }
 
 .submitBtnForm {
   border-radius: 15px;
+  padding: 2px;
   box-shadow: 1px 3px 5px;
   width: 20%;
-  background-color: rgba(128, 128, 128, 0.76);
+  background-color: $theme-color;
+  color: $background-theme-color;
 
   &:hover {
-    background-color: grey;
     box-shadow: 1px 2px 5px;
     cursor: pointer;
   }
