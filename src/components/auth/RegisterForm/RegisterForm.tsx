@@ -1,5 +1,6 @@
 import "./RegisterForm.scss";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 
 interface RegisterFormProps {
   onSubmit: (email: string, name: string, password: string) => Promise<void>;
@@ -90,6 +91,15 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
             S&apos;inscrire
           </button>
         </form>
+      </div>
+      <div className="redirect">
+        <p>
+          Déjà membre ? Cliquez{" "}
+          <button className="btnLogin">
+            <Link href="/auth/login">ici</Link>
+          </button>{" "}
+          pour vous connecter.
+        </p>
       </div>
     </>
   );

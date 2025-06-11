@@ -28,8 +28,16 @@ async function loginHandler(
 
   try {
     const { emailOrName, password } = req.body as LoginRequest;
-    const userService = new UserService();
 
+    // Validation des données requises
+    if (!emailOrName || !password) {
+      return res.status(400).json({
+        message: "Email/nom d'utilisateur et mot de passe requis",
+        success: false,
+      });
+    }
+
+    const userService = new UserService();
     const token = await userService.login(emailOrName, password);
 
     return res.status(200).json({

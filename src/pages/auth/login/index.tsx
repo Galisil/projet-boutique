@@ -1,8 +1,10 @@
 import LoginForm from "../../../components/auth/LoginForm/LoginForm";
 import { useRouter } from "next/router";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (emailOrName: string, password: string) => {
     try {
@@ -24,8 +26,8 @@ export default function Login() {
       }
 
       if (data.success && data.token) {
-        // Stocker le token dans le localStorage
-        localStorage.setItem("token", data.token);
+        // Utiliser la fonction login du contexte pour mettre à jour l'état
+        login(data.token);
         // Redirection vers la page home
         router.push("/home");
       } else {

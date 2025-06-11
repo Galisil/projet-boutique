@@ -1,5 +1,6 @@
 import "./LoginForm.scss";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 
 interface RegisterFormProps {
   onSubmit: (emailOrName: string, password: string) => Promise<void>;
@@ -50,6 +51,12 @@ export default function LoginForm({ onSubmit }: RegisterFormProps) {
             Se connecter
           </button>
         </form>
+      </div>
+      <div className="redirect">
+        <p>
+          Pas encore de compte ? Enregistrez-vous en cliquant{" "}
+          <button className="btnRegister"> <Link href="/auth/register">ici</Link></button>
+        </p>
       </div>
     </>
   );

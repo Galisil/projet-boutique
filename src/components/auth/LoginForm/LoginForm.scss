@@ -42,3 +42,15 @@
     cursor: pointer;
   }
 }
+
+.redirect {
+  display: flex;
+  justify-content: center;
+  .btnRegister {
+    color: $theme-color;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}

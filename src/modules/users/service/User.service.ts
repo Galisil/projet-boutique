@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt";
 import { AppDataSource } from "../../../lib/data-source";
 import { User } from "../../../modules/users/database/User";
+import { Tenant } from "../../../modules/tenants/database/Tenant";
 import { generateToken } from "../../../lib/jwt";
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
+  private tenantRepository = AppDataSource.getRepository(Tenant);
 
   async register(email: string, name: string, password: string) {
     // Vérifier si l'email existe déjà
@@ -25,11 +27,19 @@ export class UserService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    //créer la fk tenant_id public
+    const publicTenant = await this.tenantRepository.findOne({
+      where: { name: "Public" },
+    });
+    if (!publicTenant) {
+      throw new Error("Le tenant 'Public' n'existe pas !");
+    }
     // Créer l'utilisateur
     const newUser = this.userRepository.create({
       email,
       name,
       password: hashedPassword,
+      tenant: publicTenant,
     });
     await this.userRepository.save(newUser);
 

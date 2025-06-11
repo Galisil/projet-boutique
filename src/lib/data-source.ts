@@ -2,7 +2,9 @@
 
 import "reflect-metadata";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { entities } from "@/modules/allEntities"; //pointe vers index.ts de dir 'entity' pour regrouper toutes les entities
+import { entities } from "../modules/allEntities"; //pointe vers index.ts de dir 'entity' pour regrouper toutes les entities
+
+const isTest = process.env.NODE_ENV === "test";
 
 const config: DataSourceOptions = {
   type: "postgres",
@@ -10,12 +12,11 @@ const config: DataSourceOptions = {
   port: parseInt(process.env.DB_PORT || "5432"),
   username: process.env.DB_USERNAME || "postgres",
   password: process.env.DB_PASSWORD || "mdppgsql25",
-  database: process.env.DB_NAME || "site-echoppe-onirique",
+  database: isTest
+    ? "site-echoppe-onirique-test"
+    : process.env.DB_NAME || "site-echoppe-onirique",
   synchronize: true,
   logging: true,
-  //synchronize: process.env.NODE_ENV !== "production", // Ne pas utiliser en production
-  //logging: process.env.NODE_ENV !== "production",
-  //entities: ["src/entity/**/*.ts"],
   entities: entities,
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscribers/**/*.ts"],
@@ -24,6 +25,7 @@ const config: DataSourceOptions = {
 console.log("Configuration de la base de données:", {
   ...config,
   password: "****", // Masquer le mot de passe dans les logs
+  database: isTest ? "site-echoppe-onirique-test" : config.database,
 });
 
 export const AppDataSource = new DataSource(config);

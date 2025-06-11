@@ -2,7 +2,7 @@ import { AppDataSource } from "./data-source";
 
 let isInitialized = false;
 
-export async function getDatabaseConnection() {
+const getDatabaseConnection = async() =>{
   if (!isInitialized) {
     try {
       if (!AppDataSource.isInitialized) {
@@ -17,3 +17,12 @@ export async function getDatabaseConnection() {
   }
   return AppDataSource;
 }
+
+const stopDatabaseConnection = async() => {
+  if (isInitialized && AppDataSource.isInitialized) {
+    await AppDataSource.destroy();
+    isInitialized = false;
+    console.log("Connexion à la base de données fermée");
+  }
+}
+export {getDatabaseConnection, stopDatabaseConnection}
