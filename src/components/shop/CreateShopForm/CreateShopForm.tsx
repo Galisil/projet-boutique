@@ -2,7 +2,11 @@ import "./CreateShopForm.scss";
 import { FormEvent, useState } from "react";
 
 interface CreateShopFormProps {
-  onSubmit: (name: string, description: string) => Promise<void>;
+  onSubmit: (
+    name: string,
+    password: string,
+    confirmPassword: string
+  ) => Promise<void>;
 }
 
 export default function CreateShopForm({ onSubmit }: CreateShopFormProps) {
@@ -15,24 +19,35 @@ export default function CreateShopForm({ onSubmit }: CreateShopFormProps) {
     try {
       const formData = new FormData(event.currentTarget);
       const name = formData.get("name") as string;
-      const description = formData.get("description") as string;
+      const password = formData.get("password") as string;
+      const confirmPassword = formData.get("confirmPassword") as string;
 
+      if (password !== confirmPassword) {
+        setError("Les mots de passe ne correspondent pas");
+        return;
+      }
+
+      if (password.length < 6) {
+        setError("Le mot de passe doit contenir au moins 6 caractères");
+        return;
+      }
       // Validation des champs
 
-      await onSubmit(name, description);
+      await onSubmit(name, password, confirmPassword);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
         setError("Une erreur est survenue lors de la création de la boutique");
       }
+      console.log(error);
     }
   };
 
   return (
     <>
       <div className="divCreateShopForm">
-        {/*{error && <div className="error-message">{error}</div>}*/}
+        {error && <div className="error-message">{error}</div>}
         <form className="createShopForm" onSubmit={handleSubmit}>
           <input
             className="btnForm"
@@ -43,18 +58,17 @@ export default function CreateShopForm({ onSubmit }: CreateShopFormProps) {
           />
           <input
             className="btnForm"
-            type="text"
-            name="description"
-            placeholder="Décrivez votre boutique en quelques mots"
+            type="password"
+            name="password"
+            placeholder="Mot de passe"
             required
           />
           <input
-            type="image"
-            id="logo-shop"
-            alt="logo-boutique"
-            src="../../../public/images/{image-du-user}"
-            width={40}
-            height={40}
+            className="btnForm"
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmation de votre mot de passe"
+            required
           />
           <button className="submitBtnForm" type="submit">
             Créer ma boutique

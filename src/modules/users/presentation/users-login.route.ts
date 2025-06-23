@@ -13,6 +13,7 @@ export type LoginResponse = {
   message: string;
   success: boolean;
   token?: string;
+  userId?: number;
 };
 
 // Handler pour la connexion
@@ -38,12 +39,13 @@ async function loginHandler(
     }
 
     const userService = new UserService();
-    const token = await userService.login(emailOrName, password);
+    const { token, userId } = await userService.login(emailOrName, password);
 
     return res.status(200).json({
       message: "Connexion réussie",
       success: true,
       token,
+      userId,
     });
   } catch (error) {
     console.error("Erreur lors de la connexion:", error);

@@ -34,11 +34,11 @@
   padding: 2px;
   box-shadow: 1px 3px 5px;
   width: 20%;
-  background-color: $theme-color;
+  background: $theme-color;
   color: $background-theme-color;
 
   &:hover {
-    box-shadow: 1px 2px 5px;
+    background: $theme-color-less-opacity;
     cursor: pointer;
   }
 }
@@ -47,9 +47,13 @@
   display: flex;
   justify-content: center;
   .btnRegister {
-    color: $theme-color;
+    background: $theme-color;
+    border-radius: 45%;
+    padding: 0.1em 0.5em;
+    color: $background-theme-color;
+    // color: $theme-color;
     &:hover {
-      text-decoration: underline;
+      background: $theme-color-less-opacity;
       cursor: pointer;
     }
   }

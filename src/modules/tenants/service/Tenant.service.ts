@@ -1,39 +1,42 @@
 import { AppDataSource } from "../../../lib/data-source";
 import { Tenant } from "../database/Tenant";
+import { User } from "../../users/database/User";
+import bcrypt from "bcrypt";
 
 export class TenantService {
   private tenantRepository = AppDataSource.getRepository(Tenant);
+  private userRepository = AppDataSource.getRepository(User);
+  async register(name: string, password: string, userId: number) {
+    if (!password) {
+      throw new Error("Un mot de passe est requis pour créer une boutique.");
+    }
 
-  async createTenant(name: string) {
+    const existingName = await this.tenantRepository.findOne({
+      where: { name },
+    });
+    if (existingName) {
+      throw new Error("Ce nom de boutique est déjà pris !");
+    }
+
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newTenant = this.tenantRepository.create({
       name,
-      creationDate: new Date(),
+      password: hashedPassword,
     });
-    return await this.tenantRepository.save(newTenant);
-  }
 
-  async getAllTenants() {
-    return await this.tenantRepository.find();
-  }
+    await this.tenantRepository.save(newTenant);
 
-  async getTenantById(id: number) {
-    return await this.tenantRepository.findOne({ where: { id } });
-  }
+    await AppDataSource.createQueryBuilder()
+      .relation(User, "tenants")
+      .of(user)
+      .add(newTenant);
 
-  async updateTenant(id: number, name: string) {
-    const tenant = await this.getTenantById(id);
-    if (!tenant) {
-      throw new Error("Tenant non trouvé");
-    }
-    tenant.name = name;
-    return await this.tenantRepository.save(tenant);
-  }
-
-  async deleteTenant(id: number) {
-    const tenant = await this.getTenantById(id);
-    if (!tenant) {
-      throw new Error("Tenant non trouvé");
-    }
-    return await this.tenantRepository.remove(tenant);
+    return newTenant;
   }
 }

@@ -8,7 +8,7 @@
  * Le fichier doit rester dans le dossier 'pages' car c'est une convention Next.js.
  */
 
-//import "@/styles/globals.css";
+import "../styles/globals.scss";
 import type { AppProps } from "next/app";
 import Layout from "../components/Layout/Layout";
 import "../styles/globals.scss";

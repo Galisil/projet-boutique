@@ -29,7 +29,7 @@ export class UserService {
 
     //créer la fk tenant_id public
     const publicTenant = await this.tenantRepository.findOne({
-      where: { name: "Public" },
+      where: { id: 1 },
     });
     if (!publicTenant) {
       throw new Error("Le tenant 'Public' n'existe pas !");
@@ -39,12 +39,21 @@ export class UserService {
       email,
       name,
       password: hashedPassword,
-      tenant: publicTenant,
     });
-    await this.userRepository.save(newUser);
+    newUser.tenants = [publicTenant];
+    const savedUser = await this.userRepository.save(newUser);
+    if (!savedUser.id) {
+      console.error("savedUser.id est undefined !", savedUser);
+      throw new Error(
+        "Erreur lors de la création de l'utilisateur : id manquant"
+      );
+    }
 
-    // Générer le token
-    return generateToken(newUser.id.toString());
+    // Générer le token avec l'ID de l'utilisateur qui a VRAIMENT été sauvegardé
+    return {
+      token: generateToken(savedUser.id.toString()),
+      userId: savedUser.id,
+    };
   }
 
   async login(emailOrName: string, password: string) {
@@ -62,9 +71,15 @@ export class UserService {
     if (!isPasswordValid) {
       throw new Error("Mot de passe incorrect");
     }
-
+    if (!user.id) {
+      console.error("user.id est undefined !", user);
+      throw new Error("Erreur lors de la connexion : id manquant");
+    }
     // Générer le token
-    return generateToken(user.id.toString());
+    return {
+      token: generateToken(user.id.toString()),
+      userId: user.id,
+    };
   }
 
   async getAllUsers() {

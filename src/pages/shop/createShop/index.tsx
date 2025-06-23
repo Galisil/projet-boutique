@@ -1,19 +1,34 @@
 import CreateShopForm from "../../../components/shop/CreateShopForm/CreateShopForm";
 import { useRouter } from "next/router";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function CreateShop() {
   const router = useRouter();
+  const { userId } = useAuth();
 
-  const handleSubmit = async (name: string, description: string) => {
+  const handleSubmit = async (
+    name: string,
+    password: string,
+    confirmPassword: string
+  ): Promise<void> => {
+    if (password !== confirmPassword) {
+      throw new Error("Les mots de passe ne correspondent pas.");
+    }
+
+    if (!userId) {
+      throw new Error("Utilisateur non trouvé. Veuillez vous reconnecter.");
+    }
+
     try {
-      const response = await fetch("/api/shop/registerShop", {
+      const response = await fetch("/api/tenants/createShop", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
-          description,
+          password,
+          userId,
         }),
       });
 
@@ -21,13 +36,13 @@ export default function CreateShop() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Erreur lors de l'enregistrement de la boutique"
+          data.message || "Erreur lors de la création de la boutique"
         );
       }
 
       if (data.success) {
         // Redirection vers la page de connexion
-        router.push("/home"); //changer pour rediriger vers la boutique (/:id)
+        router.push("/home"); //changer pour aller vers la page gestion du shop
       } else {
         throw new Error(
           data.message || "Erreur lors de la création de la boutique"
@@ -35,7 +50,7 @@ export default function CreateShop() {
       }
     } catch (error) {
       if (error instanceof Error) {
-        throw error; // Propager l'erreur au composant RegisterForm
+        throw error;
       }
       throw new Error(
         "Une erreur est survenue lors de la création de la boutique"
@@ -49,51 +64,3 @@ export default function CreateShop() {
     </>
   );
 }
-
-// export default function RegisterShop() {
-//   const router = useRouter();
-
-//   const handleSubmit = async (
-//     email: string,
-//     name: string,
-//     password: string
-//   ) => {
-//     try {
-//       const response = await fetch("/api/shop/registerShop", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           email,
-//           name,
-//           password,
-//         }),
-//       });
-
-//       const data = await response.json();
-
-//       if (!response.ok) {
-//         throw new Error(data.message || "Erreur lors de l'inscription");
-//       }
-
-//       if (data.success) {
-//         // Redirection vers la page de connexion
-//         router.push("/home");
-//       } else {
-//         throw new Error(data.message || "Erreur lors de la création de la boutique");
-//       }
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         throw error; // Propager l'erreur au composant RegisterShop
-//       }
-//       throw new Error("Une erreur est survenue lors de la création de la boutique");
-//     }
-//   };
-
-//   return (
-//     <>
-//       <RegisterShop onSubmit={handleSubmit} />
-//     </>
-//   );
-// }

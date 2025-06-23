@@ -8,16 +8,19 @@ import {
 
 interface AuthContextType {
   authToken: string | null;
+  userId: number | null;
   btnLoginLogout: string | null;
   href: string;
-  login: (token: string) => void;
+  login: (token: string, userId: number) => void;
   logout: () => void;
+  handleBtnShopRedirect: (redirect: (path: string) => void) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   const [btnLoginLogout, setBtnLoginLogout] = useState<string>("");
   const [href, setHref] = useState<string>("/home");
 
@@ -25,12 +28,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateAuthState = () => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
-      if (token) {
+      const storedUserId = localStorage.getItem("userId");
+      if (token && storedUserId) {
         setAuthToken(token);
+        setUserId(parseInt(storedUserId, 10));
         setBtnLoginLogout("Déconnexion");
         setHref("/home");
       } else {
         setAuthToken(null);
+        setUserId(null);
         setBtnLoginLogout("Connexion");
         setHref("/auth/login");
       }
@@ -58,10 +64,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const login = (token: string) => {
+  const login = (token: string, userId: number) => {
     try {
       if (typeof window !== "undefined") {
+        if (!userId || !token) {
+          throw new Error("Token ou userId manquant");
+        }
         localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId.toString());
         updateAuthState();
       }
     } catch (error) {
@@ -81,9 +91,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleBtnShopRedirect = (redirect: (path: string) => void) => {
+    if (authToken) {
+      redirect("/shop/shopsListPage");
+    } else {
+      redirect("/warnings/mustLogin");
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ authToken, btnLoginLogout, href, login, logout }}
+      value={{
+        authToken,
+        userId,
+        btnLoginLogout,
+        href,
+        login,
+        logout,
+        handleBtnShopRedirect,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -17,21 +17,23 @@
 
 .btnForm {
   border-radius: 15px;
-  border: 0.01em solid $theme-color;
   background-color: rgba(211, 211, 211, 0.555);
   padding: 10px;
-  //width: 30%
+  width: 100%;
+  &:focus {
+    outline: 0.1em solid $theme-color-1;
+  }
 }
 
 .submitBtnForm {
   border-radius: 15px;
   box-shadow: 1px 3px 5px;
   width: 20%;
-  background-color: $theme-color;
+  background: $theme-color;
   color: $background-theme-color;
 
   &:hover {
-    background-color: grey;
+    background: $theme-color-less-opacity;
     box-shadow: 1px 2px 5px;
     cursor: pointer;
   }
@@ -41,9 +43,13 @@
   display: flex;
   justify-content: center;
   .btnLogin {
-    color: $theme-color;
+    background: $theme-color;
+    border-radius: 45%;
+    padding: 0.1em 0.5em;
+    color: $background-theme-color;
+    // color: $theme-color;
     &:hover {
-      text-decoration: underline;
+      background: $theme-color-less-opacity;
       cursor: pointer;
     }
   }

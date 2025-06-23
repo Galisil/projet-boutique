@@ -6,9 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
-  ManyToOne,
   JoinTable,
-  JoinColumn,
 } from "typeorm";
 
 import { Tenant } from "../../tenants/database/Tenant";
@@ -33,11 +31,11 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @ManyToOne(() => Tenant, { nullable: false })
-  @JoinColumn({ name: "tenant_id" })
-  tenant!: Tenant; // tenant principal
+  // @ManyToOne(() => Tenant, { nullable: false })
+  // @JoinColumn({ name: "tenant_id" })
+  // tenant!: Tenant; // tenant principal
 
-  @ManyToMany(() => Tenant)
+  @ManyToMany(() => Tenant, (tenant) => tenant.users, { cascade: true })
   @JoinTable({
     name: "user_tenants",
     joinColumn: { name: "user_id", referencedColumnName: "id" },

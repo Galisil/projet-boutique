@@ -1,0 +1,21 @@
+@import "../../../styles/globals.scss";
+
+.redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .btnsRedirect {
+    display: flex;
+  }
+  li {
+    color: $background-theme-color;
+    margin: 5vh;
+    padding: 10px 15px;
+    background: $theme-color;
+    border-radius: 45px;
+    &:hover {
+      background: $theme-color-less-opacity;
+      cursor: pointer;
+    }
+  }
+}

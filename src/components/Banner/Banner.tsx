@@ -7,23 +7,17 @@ import { useRouter } from "next/router";
 
 export default function Banner() {
   const router = useRouter();
-  const { logout, btnLoginLogout, href } = useAuth();
+  const { btnLoginLogout, href, handleBtnShopRedirect, logout } = useAuth();
 
-  const handleAuthClick = () => {
+  const handleAuthClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
     if (btnLoginLogout === "Déconnexion") {
+      event.preventDefault(); // Empêche le Link de naviguer tout de suite
       logout();
       router.push("/warnings/disconnected");
     }
   };
-
-  // const handleShopClick = () => {
-  //   if (token) {
-  //     btnShopHref = "/shop/handleShop";
-  //   } else {
-  //     btnShopHref = "/auth/login";
-  //   }
-  //   return btnShopHref;
-  // };
 
   return (
     <div className="div-banner">
@@ -39,7 +33,12 @@ export default function Banner() {
             {/*remplacer lien qd j'aurais fait une page à propos*/}
           </li>
           <li className="banner-nav-li">
-            <Link href="/shop/createShop">Ma boutique</Link>
+            <button
+              onClick={() => handleBtnShopRedirect(router.push)}
+              className="banner-nav-li"
+            >
+              Ma boutique
+            </button>
           </li>
           <li className="banner-nav-li">
             <Link

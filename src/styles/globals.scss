@@ -1,5 +1,14 @@
 @import "tailwindcss";
-$theme-color: #584d5c;
+// $theme-color: #584d5c;
+
+$theme-color-1: #108b8f;
+$theme-color-2: #c153ed;
+$theme-color: linear-gradient(to right, $theme-color-1, $theme-color-2);
+$theme-color-less-opacity: linear-gradient(
+  to right,
+  rgba($theme-color-1, 0.7),
+  rgba($theme-color-2, 0.7)
+);
 $background-theme-color: white;
 /* :root {
   --background: #ffffff;

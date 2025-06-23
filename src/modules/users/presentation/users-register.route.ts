@@ -14,6 +14,7 @@ export type RegisterResponse = {
   message: string;
   success: boolean;
   token?: string;
+  userId?: number;
 };
 
 // Handler pour l'inscription
@@ -31,12 +32,13 @@ async function registerHandler(
     const { email, name, password } = req.body as RegisterRequest;
     const userService = new UserService();
 
-    const token = await userService.register(email, name, password);
+    const { token, userId } = await userService.register(email, name, password);
 
     return res.status(200).json({
       message: "Inscription réussie",
       success: true,
       token,
+      userId,
     });
   } catch (error) {
     console.error("Erreur lors de l'inscription:", error);

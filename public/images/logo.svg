@@ -4,7 +4,13 @@
 <svg version="1.1" id="paint-brush-palette" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	 x="0px" y="0px" viewBox="0 0 1009.9824 1009.9527" enable-background="new 0 0 1009.9824 1009.9527" xml:space="preserve">
 <g id="paint-brush-palette-label">
-	<path fill="#584D5C" d="M504.9643,1009.9527c278.9107,0,505.0181-226.0606,505.0181-504.9527c0-278.8686-226.1074-505-505.0181-505
+<defs>
+    <linearGradient id="gradient">
+      <stop offset="5%" stop-color="#108B8F" />
+      <stop offset="95%" stop-color="#C153ED" />
+			</linearGradient>
+			</defs>
+	<path fill="url(#gradient)" d="M504.9643,1009.9527c278.9107,0,505.0181-226.0606,505.0181-504.9527c0-278.8686-226.1074-505-505.0181-505
 		C226.1074,0,0,226.1314,0,505C0,783.8921,226.1074,1009.9527,504.9643,1009.9527z"/>
 </g>
 <g id="paint-brush-palette-paint-brush-palette">
