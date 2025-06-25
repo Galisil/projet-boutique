@@ -29,7 +29,7 @@ export class UserService {
 
     //créer la fk tenant_id public
     const publicTenant = await this.tenantRepository.findOne({
-      where: { id: 1 },
+      where: { name: "Public" },
     });
     if (!publicTenant) {
       throw new Error("Le tenant 'Public' n'existe pas !");

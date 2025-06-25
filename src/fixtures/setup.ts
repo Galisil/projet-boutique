@@ -1,29 +1,56 @@
 import { getDatabaseConnection, stopDatabaseConnection } from "../lib/db";
 import { AppDataSource } from "../lib/data-source";
-import supertest from "supertest";
-import express from "express";
 import { Tenant } from "../modules/tenants/database/Tenant";
-import loginHandler from "../pages/api/auth/login";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-let request: ReturnType<typeof supertest>;
+// Fonction helper pour tester les API routes Next.js
+export async function testApiRoute(
+  handler: (
+    req: NextApiRequest,
+    res: NextApiResponse
+  ) => unknown | Promise<unknown>,
+  method: string = "GET",
+  body?: Record<string, unknown>,
+  query?: Record<string, string | string[]>
+) {
+  // Créer des objets mock simples pour les tests
+  const req = {
+    method,
+    body,
+    query,
+    headers: {},
+  } as NextApiRequest;
+
+  let responseData: unknown = null;
+  let statusCode = 200;
+
+  const res = {
+    status: (code: number) => {
+      statusCode = code;
+      return {
+        json: (data: unknown) => {
+          responseData = data;
+          return res;
+        },
+      };
+    },
+    json: (data: unknown) => {
+      responseData = data;
+      return res;
+    },
+  } as unknown as NextApiResponse;
+
+  await handler(req, res);
+
+  return {
+    data: responseData,
+    statusCode,
+  };
+}
 
 // Avant tous les tests, on se connecte à la base de données
 beforeAll(async () => {
   await getDatabaseConnection();
-
-  // Créer une application Express pour les tests
-  const app = express();
-  app.use(express.json());
-
-  // Adapter le handler Next.js pour Express
-  app.post("/api/auth/login", (req, res) => {
-    const nextReq = req as unknown as NextApiRequest;
-    const nextRes = res as unknown as NextApiResponse;
-    loginHandler(nextReq, nextRes);
-  });
-
-  request = supertest(app);
 });
 
 // Après tous les tests, on ferme la connexion
@@ -49,4 +76,4 @@ beforeEach(async () => {
   await tenantRepository.save(publicTenant);
 });
 
-export { AppDataSource, request };
+export { AppDataSource };
