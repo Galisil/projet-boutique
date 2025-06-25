@@ -27,7 +27,6 @@ export default function Login() {
 
       if (data.success && data.token) {
         // Utiliser la fonction login du contexte pour mettre à jour l'état
-        console.log("DATA: ", data);
         login(data.token, data.userId);
         // Redirection vers la page home
         router.push("/home");

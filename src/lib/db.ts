@@ -9,7 +9,6 @@ const getDatabaseConnection = async() =>{
         await AppDataSource.initialize();
       }
       isInitialized = true;
-      console.log("Connexion à la base de données établie");
     } catch (error) {
       console.error("Erreur lors de la connexion à la base de données:", error);
       throw error;
@@ -22,7 +21,6 @@ const stopDatabaseConnection = async() => {
   if (isInitialized && AppDataSource.isInitialized) {
     await AppDataSource.destroy();
     isInitialized = false;
-    console.log("Connexion à la base de données fermée");
   }
 }
 export {getDatabaseConnection, stopDatabaseConnection}

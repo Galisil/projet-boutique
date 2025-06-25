@@ -40,7 +40,6 @@ export default function CreateShopForm({ onSubmit }: CreateShopFormProps) {
       } else {
         setError("Une erreur est survenue lors de la création de la boutique");
       }
-      console.log(error);
     }
   };
 

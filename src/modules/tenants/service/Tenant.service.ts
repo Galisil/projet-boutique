@@ -7,8 +7,16 @@ export class TenantService {
   private tenantRepository = AppDataSource.getRepository(Tenant);
   private userRepository = AppDataSource.getRepository(User);
   async register(name: string, password: string, userId: number) {
+    if (!name || name.trim() === "") {
+      throw new Error("Un nom de boutique est requis.");
+    }
+
     if (!password) {
       throw new Error("Un mot de passe est requis pour créer une boutique.");
+    }
+
+    if (password.length < 6) {
+      throw new Error("Le mot de passe doit contenir au moins 6 caractères.");
     }
 
     const existingName = await this.tenantRepository.findOne({

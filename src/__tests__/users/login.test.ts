@@ -12,6 +12,7 @@ type LoginResponse = {
 };
 
 describe("Tests de la route POST /api/auth/login", () => {
+
   beforeEach(async () => {
     // Créer un utilisateur avant chaque test de connexion
     const userService = new UserService();
@@ -20,6 +21,9 @@ describe("Tests de la route POST /api/auth/login", () => {
       testUser1.name,
       testUser1.password
     );
+  });
+
+  afterEach(() => {
   });
 
   it("devrait connecter un utilisateur avec des identifiants valides", async () => {

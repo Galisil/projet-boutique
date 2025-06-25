@@ -27,7 +27,6 @@ async function createTenantHandler(
   }
 
   try {
-    console.log("Corps de la requête reçu:", req.body);
     const { name, password, userId } = req.body as CreateTenantRequest;
     const tenantService = new TenantService();
 
