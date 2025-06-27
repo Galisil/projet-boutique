@@ -1,4 +1,3 @@
-import "./CreateShopForm.scss";
 import { FormEvent, useState } from "react";
 
 interface CreateShopFormProps {

@@ -15,7 +15,7 @@ export const verifyToken = (token: string): { userId: string } => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     return decoded;
-  } catch (error) {
+  } catch {
     throw new Error("Token invalide");
   }
 };

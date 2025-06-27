@@ -1,4 +1,3 @@
-import "./Header.scss";
 import Banner from "../Banner/Banner";
 
 export default function Header() {

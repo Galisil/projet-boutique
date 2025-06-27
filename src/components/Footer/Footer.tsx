@@ -1,4 +1,3 @@
-import "./Footer.scss";
 import logoInstagram from "../../../public/images/logo-instagram.svg";
 import logoFacebook from "../../../public/images/logo-facebook.svg";
 import Image from "next/image";

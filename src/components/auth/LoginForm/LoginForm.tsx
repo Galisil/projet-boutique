@@ -1,4 +1,3 @@
-import "./LoginForm.scss";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 
@@ -52,10 +51,13 @@ export default function LoginForm({ onSubmit }: RegisterFormProps) {
           </button>
         </form>
       </div>
-      <div className="redirect">
+      <div className="loginFormRedirect">
         <p>
           Pas encore de compte ? Enregistrez-vous en cliquant{" "}
-          <button className="btnRegister"> <Link href="/auth/register">ici</Link></button>
+          <button className="btnRegister">
+            {" "}
+            <Link href="/auth/register">ici</Link>
+          </button>
         </p>
       </div>
     </>

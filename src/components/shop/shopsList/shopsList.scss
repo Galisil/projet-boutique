@@ -1,14 +1,27 @@
 @import "../../../styles/globals.scss";
 
+.container-shopsList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-.redirect {
+.shopsList-title{
+  font-size: 5vh;
+  margin: 2vh;
+}
+.container-btn-redirect{
+  display: flex;
+  flex-direction: row;
+}
+.redirectBtn {
   display: flex;
   justify-content: center;
   background: $theme-color;
   border-radius: 45%;
   padding: 0.1em 0.5em;
+  margin: 0 0.3em;
   color: $background-theme-color;
-  // color: $theme-color;
   &:hover {
     background: $theme-color-less-opacity;
     cursor: pointer;

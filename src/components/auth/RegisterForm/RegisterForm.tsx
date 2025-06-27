@@ -1,4 +1,3 @@
-import "./RegisterForm.scss";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 
@@ -92,7 +91,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
           </button>
         </form>
       </div>
-      <div className="redirect">
+      <div className="registerFormRedirect">
         <p>
           Déjà membre ? Cliquez{" "}
           <button className="btnLogin">

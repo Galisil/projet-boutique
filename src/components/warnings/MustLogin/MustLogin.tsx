@@ -1,4 +1,3 @@
-import "./MustLogin.scss";
 import Link from "next/link";
 // import { useRouter } from "next/router";
 
@@ -7,9 +6,8 @@ import Link from "next/link";
 // }
 
 export default function MustLogin() {
-
   return (
-    <div className="redirect">
+    <div className="mustLoginRedirect">
       <p>Vous devez vous connecter pour créer une boutique</p>
       <ul className="btnsRedirect">
         <li>

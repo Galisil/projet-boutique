@@ -1,36 +1,55 @@
 import Link from "next/link";
-import "./ShopsList.scss";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 
-export default function ShopsList() {
-  const [shops, setShops] = useState<any[]>([]);
+interface DisplayShopsListProps {
+  onLoad: (
+    shopsList: Array<string>
+    // link: string,
+    // image: string,
+  ) => Promise<unknown>;
+}
+
+export default function ShopsList({ onLoad }: DisplayShopsListProps) {
+  const [shops, setShops] = useState<string[]>([]);
   const { authToken } = useAuth();
 
   useEffect(() => {
     async function fetchShops() {
       if (!authToken) return;
-      // Remplace cette partie par ta vraie requête API
-      // const response = await fetch("/api/shops", { headers: { Authorization: `Bearer ${authToken}` } });
-      // const data = await response.json();
-      // setShops(data);
-      setShops([]); // Simule "pas de boutique"
-      // setShops([{ id: 1, name: "Ma boutique" }]); // Simule "au moins une boutique"
+      try {
+        const result = await onLoad([]); // Appel de la fonction onLoad pour récupérer les boutiques
+        // Mettre à jour l'état avec les données reçues
+        if (Array.isArray(result)) {
+          setShops(result);
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des boutiques:", error);
+      }
     }
     fetchShops();
-  }, [authToken]);
+  }, [authToken, onLoad]);
 
   return (
-    <>
-      <h2>Mes boutiques</h2>
-      {/*faire apparaître dynamiquement la liste (sous forme de cards) des shops gérés par l'utilisateur connecté*/}
-      <div>
-        Pas encore de boutique ? Cliquez{" "}
-        <button className="redirect">
-          <Link href="/shop/createShop">ici</Link>
-        </button>{" "}
-        pour en créer une !
+    <div className="container-shopsList">
+      <h2 className="shopsList-title">Mes boutiques</h2>
+      <div className="container-shops-cards">
+        <ul className="shopsList-cards">
+          {shops.length > 0 || shops.length ? (
+            shops.map((shop, index) => <li key={index}>{shop}</li>)
+          ) : (
+            <li>
+              <div className="container-btn-redirect">
+                Pas encore de boutique ? Cliquez{" "}
+                <button className="redirectBtn">
+                  <Link href="/shop/createShop">ici</Link>
+                </button>{" "}
+                pour en créer une !
+              </div>
+            </li>
+          )}
+        </ul>
       </div>
-    </>
+    </div>
   );
 }

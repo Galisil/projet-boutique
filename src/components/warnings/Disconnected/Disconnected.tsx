@@ -1,4 +1,3 @@
-import "./Disconnected.scss";
 import { useEffect } from "react";
 
 interface DisconnectedProps {
@@ -11,7 +10,7 @@ export default function Disconnected({ onLoad }: DisconnectedProps) {
   }, [onLoad]);
 
   return (
-    <div className="redirect">
+    <div className="redirectPage">
       <h2>Déconnexion ...</h2>
       <p>
         Vous allez être redirigé vers la page d&apos;accueil dans un instant

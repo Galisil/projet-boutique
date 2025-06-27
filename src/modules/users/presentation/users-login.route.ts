@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { UserService } from "..//service/User.service";
+import { UserService } from "../service/User.service";
 import { withDatabase } from "../../../middleware/withDatabase";
 
 // Types pour les requêtes
