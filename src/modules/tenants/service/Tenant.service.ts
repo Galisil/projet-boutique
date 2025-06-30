@@ -18,19 +18,8 @@ export class TenantService {
       throw new Error("Utilisateur non trouvé");
     }
 
-    return user.tenants;
+    return user.tenants.filter((tenant) => tenant.name !== "Public");
   }
-
-  // // Méthode alternative utilisant QueryBuilder pour plus de flexibilité
-  // async getTenantsByUserIdWithQueryBuilder(userId: number): Promise<Tenant[]> {
-  //   const tenants = await this.tenantRepository
-  //     .createQueryBuilder("tenant")
-  //     .innerJoin("tenant.users", "user")
-  //     .where("user.id = :userId", { userId })
-  //     .getMany();
-
-  //   return tenants;
-  // }
 
   async register(name: string, password: string, userId: number) {
     if (!name || name.trim() === "") {
@@ -64,15 +53,22 @@ export class TenantService {
       password: hashedPassword,
     });
 
-    // Sauvegarder le nouveau tenant
     await this.tenantRepository.save(newTenant);
+    // Charger l'utilisateur avec ses tenants existants
+    const userWithTenants = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ["tenants"],
+    });
+    if (!userWithTenants) {
+      throw new Error("Utilisateur non trouvé");
+    }
+    if (!userWithTenants.tenants) {
+      userWithTenants.tenants = [];
+    }
 
-    // // Ajouter la relation many-to-many
-    // await AppDataSource.createQueryBuilder()
-    //   .relation(User, "tenants")
-    //   .of(user)
-    //   .add(newTenant);
-
+    // Associer le nouveau tenant à l'utilisateur
+    userWithTenants.tenants.push(newTenant);
+    await this.userRepository.save(userWithTenants);
     // Récupérer la liste des tenants de l'utilisateur
     const shopsList = await this.getTenantsByUserId(userId);
     console.log("TENANTS BY USERID: ", shopsList);
@@ -80,31 +76,3 @@ export class TenantService {
     return { newTenant, shopsList };
   }
 }
-
-// //solution méthodes suppp par cursor, avec query builder :
-// // Vérifier si un utilisateur appartient à un tenant
-// async userBelongsToTenant(userId: number, tenantId: number): Promise<boolean> {
-//   const count = await this.tenantRepository
-//     .createQueryBuilder("tenant")
-//     .innerJoin("tenant.users", "user")
-//     .where("user.id = :userId", { userId })
-//     .andWhere("tenant.id = :tenantId", { tenantId })
-//     .getCount();
-
-//   return count > 0;
-// }
-
-// // Ajouter un utilisateur à un tenant existant
-// async addUserToTenant(userId: number, tenantId: number): Promise<void> {
-//   const user = await this.userRepository.findOneBy({ id: userId });
-//   const tenant = await this.tenantRepository.findOneBy({ id: tenantId });
-
-//   if (!user || !tenant) {
-//     throw new Error("Utilisateur ou tenant non trouvé");
-//   }
-
-//   await AppDataSource.createQueryBuilder()
-//     .relation(User, "tenants")
-//     .of(user)
-//     .add(tenant);
-// }

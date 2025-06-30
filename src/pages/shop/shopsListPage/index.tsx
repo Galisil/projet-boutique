@@ -22,15 +22,7 @@ export default function ShopsListPage() {
       }
 
       if (data.success && Array.isArray(data.shopsList)) {
-        console.log("VOILA la shoplist: ", data.shopsList);
-        const filteredShopsList = Array.isArray(data.shopsList)
-          ? data.shopsList.filter((shop: string) => shop !== "Public")
-          : [];
-        if (filteredShopsList.length > 0) {
-          return filteredShopsList;
-        } else {
-          return [];
-        }
+        return data.shopsList;
       }
       return [];
     } catch (error) {
