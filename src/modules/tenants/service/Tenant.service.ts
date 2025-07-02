@@ -3,6 +3,11 @@ import { Tenant } from "../database/Tenant";
 import { User } from "../../users/database/User";
 import bcrypt from "bcrypt";
 
+interface TenantList {
+  id: number;
+  name: string;
+}
+
 export class TenantService {
   private tenantRepository = AppDataSource.getRepository(Tenant);
   private userRepository = AppDataSource.getRepository(User);
@@ -19,6 +24,39 @@ export class TenantService {
     }
 
     return user.tenants.filter((tenant) => tenant.name !== "Public");
+  }
+
+  // Méthode pour récupérer la liste des tenants avec format simplifié
+  async getTenantsListByUserId(userId: number): Promise<TenantList[]> {
+    const tenants = await this.getTenantsByUserId(userId);
+    return tenants.map((tenant) => ({
+      id: tenant.id,
+      name: tenant.name,
+    }));
+  }
+
+  // Méthode pour récupérer une boutique spécifique et vérifier les permissions
+  async getShopByIdAndUserId(
+    shopId: number,
+    userId: number
+  ): Promise<Tenant | null> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ["tenants"],
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    // Vérifier que l'utilisateur a accès à cette boutique
+    const userShop = user.tenants.find((tenant) => tenant.id === shopId);
+
+    if (!userShop) {
+      return null; // L'utilisateur n'a pas accès à cette boutique
+    }
+
+    return userShop;
   }
 
   async register(name: string, password: string, userId: number) {
@@ -74,5 +112,26 @@ export class TenantService {
     console.log("TENANTS BY USERID: ", shopsList);
 
     return { newTenant, shopsList };
+  }
+
+  async login(shopId: number, userId: number, password: string) {
+    // Récupérer la boutique et vérifier l'accès de l'utilisateur
+    const shop = await this.getShopByIdAndUserId(shopId, userId);
+
+    if (!shop) {
+      throw new Error("Boutique non trouvée ou accès non autorisé");
+    }
+
+    // Vérifier le mot de passe
+    if (!shop.password) {
+      throw new Error("Mot de passe de la boutique non configuré");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, shop.password);
+    if (!isPasswordValid) {
+      throw new Error("Mot de passe incorrect");
+    }
+
+    return { success: true, shop };
   }
 }

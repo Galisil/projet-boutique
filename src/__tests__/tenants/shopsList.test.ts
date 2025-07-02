@@ -13,6 +13,7 @@ type ShopsListResponse = {
   message: string;
   success: boolean;
   shopsList: Array<string> | null;
+  id: number;
 };
 
 describe("Tests de la route GET /api/tenants/shopsList", () => {

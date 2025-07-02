@@ -2,22 +2,32 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 
+interface Shop {
+  id: number;
+  name: string;
+}
+
 interface DisplayShopsListProps {
   onLoad: (
-    shopsList: Array<string>
+    shopsList: Array<Shop>
     // link: string,
     // image: string,
-  ) => Promise<unknown>;
+  ) => Promise<Shop[]>;
 }
 
 export default function ShopsList({ onLoad }: DisplayShopsListProps) {
-  const [shops, setShops] = useState<string[]>([]);
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { authToken } = useAuth();
 
   useEffect(() => {
     async function fetchShops() {
-      if (!authToken) return;
+      if (!authToken) {
+        setIsLoading(false);
+        return;
+      }
       try {
+        setIsLoading(true);
         const result = await onLoad([]); // Appel de la fonction onLoad pour récupérer les boutiques
         // Mettre à jour l'état avec les données reçues
         if (Array.isArray(result)) {
@@ -25,6 +35,8 @@ export default function ShopsList({ onLoad }: DisplayShopsListProps) {
         }
       } catch (error) {
         console.error("Erreur lors du chargement des boutiques:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchShops();
@@ -35,8 +47,18 @@ export default function ShopsList({ onLoad }: DisplayShopsListProps) {
       <h2 className="shopsList-title">Mes boutiques</h2>
       <div className="container-shops-cards">
         <ul className="shopsList-cards">
-          {shops.length > 0 || shops.length ? (
-            shops.map((shop, index) => <li key={index}>{shop}</li>)
+          {isLoading ? (
+            <li>
+              <div className="loading-message">Chargement des boutiques...</div>
+            </li>
+          ) : shops.length > 0 ? (
+            shops.map((shop) => (
+              <li key={shop.id}>
+                <Link href={`/warnings/requiredPassword?shopId=${shop.id}`}>
+                  {shop.name}
+                </Link>
+              </li>
+            ))
           ) : (
             <li>
               <div className="container-btn-redirect">

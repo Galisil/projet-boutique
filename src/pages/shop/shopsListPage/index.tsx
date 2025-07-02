@@ -2,11 +2,16 @@ import ShopsList from "../../../components/shop/ShopsList/ShopsList";
 // import { useRouter } from "next/router";
 import { useAuth } from "../../../context/AuthContext";
 
+interface Shop {
+  id: number;
+  name: string;
+}
+
 export default function ShopsListPage() {
   // const router = useRouter();
   const { userId } = useAuth();
 
-  const displayShopsList = async () => {
+  const displayShopsList = async (): Promise<Shop[]> => {
     try {
       const response = await fetch(`/api/tenants/shopsList?userId=${userId}`, {
         method: "GET",
@@ -27,6 +32,7 @@ export default function ShopsListPage() {
       return [];
     } catch (error) {
       console.log(error);
+      return [];
     }
   };
   return (

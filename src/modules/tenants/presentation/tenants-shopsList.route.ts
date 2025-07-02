@@ -11,7 +11,7 @@ export type ShopsListRequest = {
 export type ShopsListResponse = {
   message: string;
   success: boolean;
-  shopsList: Array<string> | null;
+  shopsList: Array<{ id: number; name: string }> | null;
 };
 
 // Handler pour la connexion
@@ -40,14 +40,14 @@ async function shopsListDisplayHandler(
     }
 
     const tenantService = new TenantService();
-    const tenants = await tenantService.getTenantsByUserId(
+    const tenants = await tenantService.getTenantsListByUserId(
       parseInt(userId, 10)
     );
 
     return res.status(200).json({
       message: "Liste des boutiques récupérée",
       success: true,
-      shopsList: tenants.map((tenant) => tenant.name),
+      shopsList: tenants,
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des boutiques:", error);

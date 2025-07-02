@@ -23,9 +23,6 @@ describe("Tests de la route POST /api/auth/login", () => {
     );
   });
 
-  afterEach(() => {
-  });
-
   it("devrait connecter un utilisateur avec des identifiants valides", async () => {
     const loginData = {
       emailOrName: testUser1.email,
