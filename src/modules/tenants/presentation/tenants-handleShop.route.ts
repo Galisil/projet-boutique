@@ -7,6 +7,12 @@ export type GetShopRequest = {
   userId: number;
 };
 
+export type CreateAdminRequest = {
+  email: string;
+  name: string;
+  password: string;
+};
+
 // Types pour les réponses
 export type GetShopResponse = {
   message: string;
@@ -19,19 +25,40 @@ export type GetShopResponse = {
   } | null;
 };
 
-// Handler pour récupérer une boutique spécifique
+export type CreateAdminResponse = {
+  message: string;
+  success: boolean;
+  admin?: {
+    id: number;
+    email: string;
+    name: string;
+  };
+};
+
+// Handler pour récupérer une boutique spécifique et créer des administrateurs
 async function handleShopHandler(
   req: NextApiRequest,
-  res: NextApiResponse<GetShopResponse>
+  res: NextApiResponse<GetShopResponse | CreateAdminResponse>
 ) {
-  if (req.method !== "GET") {
+  if (req.method === "GET") {
+    // Logique existante pour GET
+    return handleGetShop(req, res);
+  } else if (req.method === "POST") {
+    // Nouvelle logique pour POST (création d'administrateur)
+    return handleCreateAdmin(req, res);
+  } else {
     return res.status(405).json({
       message: "Méthode non autorisée",
       success: false,
       shop: null,
     });
   }
+}
 
+async function handleGetShop(
+  req: NextApiRequest,
+  res: NextApiResponse<GetShopResponse>
+) {
   try {
     const { id } = req.query as { id: string };
     const { userId } = req.query as { userId: string };
@@ -78,6 +105,51 @@ async function handleShopHandler(
           : "Erreur lors de la récupération de la boutique",
       success: false,
       shop: null,
+    });
+  }
+}
+
+async function handleCreateAdmin(
+  req: NextApiRequest,
+  res: NextApiResponse<CreateAdminResponse>
+) {
+  try {
+    const { id } = req.query as { id: string };
+    const { email, name, password } = req.body as CreateAdminRequest;
+
+    // Validation des données requises
+    if (!id || !email || !name || !password) {
+      return res.status(400).json({
+        message: "Toutes les données sont requises (email, name, password)",
+        success: false,
+      });
+    }
+
+    const tenantService = new TenantService();
+    const admin = await tenantService.createAdminForShop(
+      parseInt(id, 10),
+      email,
+      name,
+      password
+    );
+
+    return res.status(201).json({
+      message: "Administrateur créé avec succès",
+      success: true,
+      admin: {
+        id: admin.id,
+        email: admin.email,
+        name: admin.name,
+      },
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'administrateur:", error);
+    return res.status(500).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la création de l'administrateur",
+      success: false,
     });
   }
 }

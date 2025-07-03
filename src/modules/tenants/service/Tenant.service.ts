@@ -134,4 +134,74 @@ export class TenantService {
 
     return { success: true, shop };
   }
+
+  // Méthode pour créer un nouvel administrateur pour une boutique
+  async createAdminForShop(
+    shopId: number,
+    email: string,
+    name: string,
+    password: string
+  ) {
+    // Vérifier que la boutique existe
+    const shop = await this.tenantRepository.findOne({
+      where: { id: shopId },
+    });
+
+    if (!shop) {
+      throw new Error("Boutique non trouvée");
+    }
+
+    // Vérifier que l'utilisateur existe avec l'email ET le nom exacts
+    const user = await this.userRepository.findOne({
+      where: { email: email, name: name },
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé avec cet email et ce nom");
+    }
+
+    // Vérifier que la boutique a un mot de passe
+    if (!shop.password) {
+      throw new Error("Mot de passe de la boutique non configuré");
+    }
+
+    // Vérifier le mot de passe
+    const isPasswordValid = await bcrypt.compare(password, shop.password);
+    if (!isPasswordValid) {
+      throw new Error("Mot de passe incorrect");
+    }
+
+    // Charger l'utilisateur avec ses tenants existants
+    const userWithTenants = await this.userRepository.findOne({
+      where: { id: user.id },
+      relations: ["tenants"],
+    });
+
+    if (!userWithTenants) {
+      throw new Error("Erreur lors de la récupération de l'utilisateur");
+    }
+
+    if (!userWithTenants.tenants) {
+      userWithTenants.tenants = [];
+    }
+
+    // Vérifier si l'utilisateur a déjà accès à cette boutique
+    const alreadyHasAccess = userWithTenants.tenants.some(
+      (tenant) => tenant.id === shopId
+    );
+    if (alreadyHasAccess) {
+      throw new Error("Cet utilisateur a déjà accès à cette boutique");
+    }
+
+    // Associer l'utilisateur à la boutique (comme dans register)
+    userWithTenants.tenants.push(shop);
+    await this.userRepository.save(userWithTenants);
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      message: "Utilisateur promu administrateur avec succès",
+    };
+  }
 }

@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
+import HandleShop from "../../../components/shop/HandleShop/HandleShop";
 
 interface ShopDetails {
   id: number;
@@ -88,28 +89,5 @@ export default function HandleShopPage() {
     );
   }
 
-  return (
-    <div>
-      <h1>Gestion de la boutique : {shopDetails.name}</h1>
-      <div>
-        <p>
-          <strong>ID :</strong> {shopDetails.id}
-        </p>
-        <p>
-          <strong>Nom :</strong> {shopDetails.name}
-        </p>
-        <p>
-          <strong>Créée le :</strong>{" "}
-          {new Date(shopDetails.createdAt).toLocaleDateString("fr-FR")}
-        </p>
-        <p>
-          <strong>Modifiée le :</strong>{" "}
-          {new Date(shopDetails.updatedAt).toLocaleDateString("fr-FR")}
-        </p>
-      </div>
-      <button onClick={() => router.push("/shop/shopsListPage")}>
-        Retour à la liste des boutiques
-      </button>
-    </div>
-  );
+  return <HandleShop shopDetails={shopDetails} />;
 }
